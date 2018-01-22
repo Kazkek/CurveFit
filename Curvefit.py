@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 #plt.rcParams["figure.figsize"] = (15,8)
 import constants
 
-data = loadtxt('C:\curvefit\stmfull.dat',delimiter=',',skiprows=1)
+data = loadtxt('stmfull.dat',delimiter=',',skiprows=1)
 x = data[:, 0]
 y = data[:, 1]
 l = data[:, 2]
@@ -20,7 +20,7 @@ newl = []
 newlindice = []
 t=0
 for k in y:
-	if k > -2.7E-6 and k < 0:
+	if k >=0 and k < 7.3E-8:
 		newlindice.append(t)
 		newl.append(k)
 	t += 1
@@ -28,7 +28,8 @@ for k in y:
 dy = zeros(y.shape,float)
 dy[0:-1] = diff(x)/diff(j)
 dyclip = clip(dy, 1E-7,1.86E-7)
-
+H = zeros(y.shape,float)
+H[0:] = (x-(((constants.k*constants.T)/constants.q)*log((y)/(constants.A*constants.Ar*(constants.T)*(constants.T)))))
 truncdy = []
 t = 0
 for i in dy:
@@ -44,11 +45,17 @@ def schottky(V, phiB, n):
 	"Ideal Diode equation"
 	return (constants.A*constants.Ar*constants.T**2 * exp((-constants.q*phiB)/(constants.k*constants.T)) * exp((constants.q*V)/(n*constants.k*constants.T)) * (1-exp((-constants.q*V)/(constants.k*constants.T))))
 	
-def linear(P,m,b):
+def linear(P,m,n):
 	"Linear Fitting"
 	#y = pars['y']
 	#m = pars['n']
-	return (m*P+b)
+	return (m*P+n*constants.k*constants.T/constants.q)
+	
+def Hlinear(P,m,n):
+	"Linear Fitting"
+	#y = pars['y']
+	#m = pars['n']
+	return (m*P+n*constants.k*constants.T/constants.q)
 	
 def logschottky(V,I,n):
 	"Log fitting linear"
@@ -68,16 +75,19 @@ vlin = linspace(-2,2,200)
 #gmodel = Model(schottky)
 #result = gmodel.fit(y, V=x, phiB=constants.phiB, n=constants.n)
 
-#gmodel = Model(linear)
-#result = gmodel.fit(truncdy, P=newl, m=constants.n, b=0)
+gmodel = Model(linear)
+result = gmodel.fit(truncdy, P=newl, m=constants.n, n=constants.n)
+Hmodel = Model(Hlinear)
+result = Hmodel.fit(truncdy, P=newl, m=constants.n, n=constants.n)
 
 slope=(truncdy[-1]-truncdy[0])/(newl[-1]-newl[0])
 
 #gmodel = Model(logschottky)
 #result = gmodel.fit(y, V=x, I=constants.phiB, n=constants.n)
-#print(result.fit_report())
+print(result.fit_report())
 
-plt.plot(y, dy,         'bo')
+#plt.plot(newl, truncdy,         'bo')
+plt.plot(y,H,         'bo')
 #plt.plot(x, result.init_fit, 'k--')
 #plt.plot(newl, result.best_fit, 'r-')
 #print (truncdy)
