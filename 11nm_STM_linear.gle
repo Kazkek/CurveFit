@@ -1,0 +1,50 @@
+size 9 9
+set font texcmss
+set hei 0.4
+gsx = pagewidth()  !graph size x
+gsy = pageheight() !graph size y
+include "graphutil.gle"
+sub dv_fit x R n
+	return (R*x+n*k*T/q)
+end sub
+
+sub H_fit x R n phiB
+	return ((R)*x+(n)*phiB)
+end sub
+
+k = 1.38064852E-23
+T = 77
+q = 1.602E-19
+Rs= 8314.6
+Rs_H= 11689
+n = -6.399
+phiB= 0.016
+
+amove 0 0
+data_filename$       = "11nm_STM_linear_out.dat"
+marker_size			 = 0.2
+begin graph
+	scale auto	
+	size gsx gsy
+	data data_filename$ d1=c1,c3 d2=c1,c2
+	!let d1 = 1.0*d1
+	d1 marker fcircle msize marker_size color blue
+	d2 marker fcircle msize marker_size color red
+	let d5 = dv_fit(x,Rs,n)
+	d5 line color red lwidth 0.04	
+	let d6 = H_fit(x,Rs_H,n,phiB)
+	d6 line color blue lwidth 0.04
+	key off
+	xaxis format "sci 2"
+	xaxis nticks 5
+	xtitle "Current (A)"
+	ytitle "Voltage (V)"
+!	yaxis  min _ymin max _ymax
+!	xaxis  min _xmin max _xmax
+end graph
+begin key
+compact
+	position br
+	marker fcircle msize marker_size color blue text "H(I)"
+	marker fcircle msize marker_size color red text "dV/dlnI"
+end key

@@ -1,0 +1,30 @@
+[[Model]]
+    Model(linear)
+[[Fit Statistics]]
+    # function evals   = 9
+    # data points      = 38
+    # variables        = 2
+    chi-square         = 0.003
+    reduced chi-square = 0.000
+    Akaike info crit   = -358.760
+    Bayesian info crit = -355.485
+[[Variables]]
+    Rs:   8446.96983 +/- 82.03232 (0.97%) (init= 0)
+    n:    5.35958781 +/- 0.322920 (6.03%) (init= 0)
+[[Correlations]] (unreported correlations are <  0.100)
+    C(Rs, n)                     = -0.753 
+[[Model]]
+    Model(Hlinear)
+[[Fit Statistics]]
+    # function evals   = 8
+    # data points      = 38
+    # variables        = 2
+    chi-square         = 0.049
+    reduced chi-square = 0.001
+    Akaike info crit   = -248.560
+    Bayesian info crit = -245.285
+[[Variables]]
+    phiB:  -0.05178974 +/- 0.001704 (3.29%) (init= 0.85)
+    Rs:     11864.2725 +/- 349.7161 (2.95%) (init= 8446.97)
+[[Correlations]] (unreported correlations are <  0.100)
+    C(phiB, Rs)                  =  0.753 
